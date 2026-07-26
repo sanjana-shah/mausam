@@ -49,8 +49,8 @@ struct ContentView: View {
     }()
     @State private var temperature: Double?
     @State private var isShowingCitySearch = false
-    @State private var selectedCity : CitySearchResult
-    
+    @State private var selectedCity: CitySearchResult
+
     init() {
         let initialCity = CityStorage.load() ?? CitySearchResult.newYork
         _selectedCity = State(initialValue: initialCity)
@@ -83,6 +83,34 @@ struct ContentView: View {
                 HourlyForecastView(hourlyWeather: sampleHourlyWeather)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.top, 24)
+
+                Button("Test Weather Notification") {
+                    Task {
+                        guard let temperature else {
+                            print("Weather not loaded yet")
+                            return
+                        }
+
+                        do {
+                            let permissionGranted =
+                                try await NotificationService()
+                                .requestPermission()
+                            guard permissionGranted else {
+                                print("Notification permission was denied.")
+                                return
+                            }
+
+                            try await NotificationService().scheduleTestNotification(
+                                    cityName: selectedCity.name,
+                                    temperature: temperature
+                                )
+                            print("Test notification scheduled")
+                        } catch {
+                            print("Unable to schedule notification \(error)")
+                        }
+
+                    }
+                }
             }
             .padding()
         }.sheet(isPresented: $isShowingCitySearch) {

@@ -19,8 +19,7 @@ struct NotificationService {
 
     func scheduleWeatherNotification(
         for city: CitySearchResult,
-        weather: CurrentWeather,
-        trigger: UNTimeIntervalNotificationTrigger
+        weather: CurrentWeather
     )
         async throws
     {
@@ -28,6 +27,11 @@ struct NotificationService {
         content.title = "Weather in \(city.name)"
         content.body = "It is currently \(weather.temperature.formatted()) °F"
         content.sound = .default
+
+        let trigger = UNTimeIntervalNotificationTrigger(
+            timeInterval: 30,
+            repeats: false
+        )
 
         let request = UNNotificationRequest(
             identifier: "mausam-test-notification",

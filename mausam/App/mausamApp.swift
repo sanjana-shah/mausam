@@ -13,5 +13,12 @@ struct mausamApp: App {
         WindowGroup {
             ContentView()
         }
+        .backgroundTask(
+            .appRefresh(BackgroundRefreshService.taskIdentifier)
+        ) {
+            print("Mausam background refresh started")
+            await BackgroundRefreshService()
+                 .performRefresh()
+        }
     }
 }

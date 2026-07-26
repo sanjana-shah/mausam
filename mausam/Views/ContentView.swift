@@ -104,11 +104,7 @@ struct ContentView: View {
                             try await NotificationService()
                                 .scheduleWeatherNotification(
                                     for: selectedCity,
-                                    weather: currentWeather,
-                                    trigger: UNTimeIntervalNotificationTrigger(
-                                        timeInterval: 30,
-                                        repeats: false
-                                    )
+                                    weather: currentWeather
                                 )
                             print("Test notification scheduled")
                         } catch {
@@ -132,6 +128,7 @@ struct ContentView: View {
         }
         .task {
             await loadWeather(for: selectedCity)
+            BackgroundRefreshService().scheduleNextRefresh()
         }
     }
     private func loadWeather(for city: CitySearchResult) async {

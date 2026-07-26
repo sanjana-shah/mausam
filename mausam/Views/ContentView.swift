@@ -48,6 +48,7 @@ struct ContentView: View {
         return generatedData
     }()
     @State private var temperature: Double?
+    @State private var currentWeather: CurrentWeather?
     @State private var isShowingCitySearch = false
     @State private var selectedCity: CitySearchResult
 
@@ -86,7 +87,7 @@ struct ContentView: View {
 
                 Button("Test Weather Notification") {
                     Task {
-                        guard let temperature else {
+                        guard let currentWeather else {
                             print("Weather not loaded yet")
                             return
                         }
@@ -100,9 +101,14 @@ struct ContentView: View {
                                 return
                             }
 
-                            try await NotificationService().scheduleTestNotification(
-                                    cityName: selectedCity.name,
-                                    temperature: temperature
+                            try await NotificationService()
+                                .scheduleWeatherNotification(
+                                    for: selectedCity,
+                                    weather: currentWeather,
+                                    trigger: UNTimeIntervalNotificationTrigger(
+                                        timeInterval: 30,
+                                        repeats: false
+                                    )
                                 )
                             print("Test notification scheduled")
                         } catch {
@@ -134,6 +140,7 @@ struct ContentView: View {
                 latitude: city.latitude,
                 longitude: city.longitude
             )
+            currentWeather = weather
             temperature = weather.temperature
         } catch {
             print("Unable to load weather: \(error)")

@@ -25,7 +25,7 @@ struct NotificationService {
     {
         let content = UNMutableNotificationContent()
         content.title = "Weather in \(city.name)"
-        content.body = "It is currently \(weather.temperature.formatted()) °F"
+        content.body = "It is currently \(weather.temperature.formatted()) ℃ (\(weather.temperatureFahrenheit.formatted()) ℉)"
         content.sound = .default
 
         let trigger = UNTimeIntervalNotificationTrigger(

@@ -16,7 +16,7 @@ struct WeatherAPIClient {
             + "?latitude=\(latitude)"
             + "&longitude=\(longitude)"
             + "&current=temperature_2m"
-            + "&temperature_unit=fahrenheit"
+            + "&temperature_unit=celsius"
 
         guard let url = URL(string: urlString) else {
             throw URLError(.badURL)

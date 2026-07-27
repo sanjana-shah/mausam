@@ -9,45 +9,6 @@ import SwiftUI
 
 struct ContentView: View {
 
-    let sampleHourlyWeather: [HourlyWeather] = {
-
-        let symbols = [
-            "sun.max.fill",
-            "sun.max.fill",
-            "cloud.sun.fill",
-            "cloud.fill",
-            "cloud.rain.fill",
-            "cloud.rain.fill",
-            "cloud.fill",
-            "cloud.sun.fill",
-        ]
-
-        let temperatures = [
-            72, 74, 75, 74, 71, 69, 68, 67,
-        ]
-
-        let generatedData: [HourlyWeather] = (0..<24).compactMap { hourOffset in
-            guard
-                let date = Calendar.current.date(
-                    byAdding: .hour,
-                    value: hourOffset,
-                    to: .now
-                )
-            else {
-                return nil
-            }
-
-            return HourlyWeather(
-                date: date,
-                symbolName: symbols[hourOffset % symbols.count],
-                temperature: temperatures[hourOffset % temperatures.count],
-                isCurrentHour: hourOffset == 0
-            )
-        }
-
-        return generatedData
-    }()
-    @State private var temperature: Double?
     @State private var currentWeather: CurrentWeather?
     @State private var isShowingCitySearch = false
     @State private var selectedCity: CitySearchResult
@@ -60,7 +21,7 @@ struct ContentView: View {
         ScrollView {
             VStack(spacing: 12) {
                 HStack(spacing: 8) {
-                    Text(selectedCity.name).font(.title2)
+                    Text(selectedCity.name).font(.title)
                     Button {
                         isShowingCitySearch = true
                     } label: {
@@ -70,20 +31,22 @@ struct ContentView: View {
                     .buttonStyle(.plain)
                     .accessibilityLabel("Change city")
                 }
-                DigitalClockView()
-                if let temperature {
-                    Text("\(Int(temperature.rounded())) ℉").font(
+                DigitalClockView(timeZoneIdentifier: selectedCity.timezone)
+                if let currentWeather {
+                    Text(
+                        "\(Int(currentWeather.temperature.rounded())) ℃"
+                    ).font(
                         .system(size: 72, weight: .thin)
                     )
+
+                    Text(
+                        "\(Int(currentWeather.temperatureFahrenheit.rounded())) ℉"
+                    ).font(
+                        .title
+                    ).foregroundStyle(.primary)
                 } else {
                     ProgressView()
                 }
-
-                Text("partly cloudy").font(.title3)
-                Text("H: 78 ℉  L: 64 ℉").font(.subheadline)
-                HourlyForecastView(hourlyWeather: sampleHourlyWeather)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.top, 24)
 
                 Button("Test Weather Notification") {
                     Task {
@@ -115,7 +78,8 @@ struct ContentView: View {
                 }
             }
             .padding()
-        }.sheet(isPresented: $isShowingCitySearch) {
+        }
+        .sheet(isPresented: $isShowingCitySearch) {
             CitySearchView { city in
                 selectedCity = city
                 CityStorage.save(city)
@@ -138,7 +102,6 @@ struct ContentView: View {
                 longitude: city.longitude
             )
             currentWeather = weather
-            temperature = weather.temperature
         } catch {
             print("Unable to load weather: \(error)")
         }

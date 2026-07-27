@@ -8,9 +8,14 @@
 import SwiftUI
 
 struct DigitalClockView:View {
+    let timeZoneIdentifier : String
+    
+    private var timeZone: TimeZone {
+        TimeZone(identifier: timeZoneIdentifier) ?? .current
+    }
     var body: some View {
         TimelineView(.everyMinute) {context in
-            Text(context.date, format: .dateTime.hour().minute())
+            Text(context.date.formatted(Date.FormatStyle(date: .omitted, time: .shortened, timeZone: timeZone)))
                 .font(.system(size: 64, weight: .light))
         }
     }

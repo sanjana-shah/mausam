@@ -17,12 +17,14 @@ struct CitySearchResult: Codable, Identifiable {
     let latitude: Double
     let longitude: Double
     let country: String
+    let timezone: String
     
     static let newYork = CitySearchResult(
         id: 5_128_581,
         name: "New York",
         latitude: 40.7128,
         longitude: -74.0060,
-        country: "United States"
+        country: "United States",
+        timezone: "America/New_York"
     )
 }

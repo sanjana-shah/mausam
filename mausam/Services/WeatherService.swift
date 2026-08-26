@@ -66,7 +66,7 @@ struct WeatherService {
             return HourlyWeather (
                 date: date,
                 symbolName: symbolName(for: response.hourly.weatherCodes[index]),
-                temperature: Int(response.hourly.temperatures[index].rounded()),
+                temperature: response.hourly.temperatures[index].rounded(),
                 precipitationProbability: Int(response.hourly.precipitationProbabilities[index].rounded()),
                 precipitationAmount: response.hourly.precipitationAmounts[index],
                 isCurrentHour: calendar.isDate(date, equalTo: now, toGranularity: .hour)

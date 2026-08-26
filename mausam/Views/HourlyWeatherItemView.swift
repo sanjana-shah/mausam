@@ -28,10 +28,13 @@ struct HourlyWeatherItemView: View {
             Image(systemName: weather.symbolName)
                 .font(.title2)
                 .frame(width: 28, height: 28)
-            Text("\(weather.temperature) °").font(.headline)
+            Text("\(Int(weather.temperature.rounded())) ℃").font(.headline)
+            Text(
+                "\(Int(weather.temperatureFahrenheit.rounded())) ℉"
+            ).font(.subheadline)
 
         }
-        .frame(width: 65, height: 88, alignment: .top)
+        .frame(width: 65, height: 140, alignment: .top)
     }
 }
 

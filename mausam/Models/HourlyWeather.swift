@@ -11,7 +11,7 @@ struct HourlyWeather: Identifiable {
 
     let date: Date
     let symbolName: String
-    let temperature: Int
+    let temperature: Double
     let precipitationProbability: Int
     let precipitationAmount: Double
     let isCurrentHour: Bool
@@ -21,6 +21,13 @@ struct HourlyWeather: Identifiable {
     }
     
     var isRainExpected: Bool {
-        precipitationProbability > 0 || precipitationAmount > 0
+        precipitationProbability > 20 || precipitationAmount > 0
+    }
+    
+}
+
+extension HourlyWeather {
+    var temperatureFahrenheit: Double {
+        temperature * 9 / 5 + 32
     }
 }

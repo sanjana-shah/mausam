@@ -53,31 +53,31 @@ struct ContentView: View {
                     HourlyForecastView(hourlyWeather: hourlyWeather, timezone: TimeZone(identifier: selectedCity.timezone) ?? .current)
                 }
 
-                Button("Test Weather Notification") {
-                    Task {
-                        guard !hourlyWeather.isEmpty else {
-                            print("Weather not loaded yet")
-                            return
-                        }
-
-                        do {
-                            let permissionGranted =
-                                try await NotificationService()
-                                .requestPermission()
-                            guard permissionGranted else {
-                                print("Notification permission was denied.")
-                                return
-                            }
-
-                            try await NotificationService()
-                                .scheduleRainNotification(for: selectedCity, rainyHours: hourlyWeather)
-                            print("Test notification scheduled")
-                        } catch {
-                            print("Unable to schedule notification \(error)")
-                        }
-
-                    }
-                }
+//                Button("Test Weather Notification") {
+//                    Task {
+//                        guard !hourlyWeather.isEmpty else {
+//                            print("Weather not loaded yet")
+//                            return
+//                        }
+//
+//                        do {
+//                            let permissionGranted =
+//                                try await NotificationService()
+//                                .requestPermission()
+//                            guard permissionGranted else {
+//                                print("Notification permission was denied.")
+//                                return
+//                            }
+//
+//                            try await NotificationService()
+//                                .scheduleRainNotification(for: selectedCity, rainyHours: hourlyWeather)
+//                            print("Test notification scheduled")
+//                        } catch {
+//                            print("Unable to schedule notification \(error)")
+//                        }
+//
+//                    }
+//                }
             }
             .padding()
         }

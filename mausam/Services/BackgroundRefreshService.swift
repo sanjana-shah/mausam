@@ -14,8 +14,8 @@ final class BackgroundRefreshService {
         let request = BGAppRefreshTaskRequest(identifier: Self.taskIdentifier)
 
         request.earliestBeginDate = Calendar.current.date(
-            byAdding: .minute,
-            value: 30,
+            byAdding: .hour,
+            value: 4,
             to: Date()
         )
 
@@ -40,11 +40,22 @@ final class BackgroundRefreshService {
                 longitude: city.longitude,
                 timezone: city.timezone
             )
+            let now = Date()
+            let eightHoursFromNow = now.addingTimeInterval(8 * 60 * 60)
+            
+            let rainyHours = weather.hourly.filter{ hour in
+                hour.date >= now &&
+                hour.date < eightHoursFromNow &&
+                hour.isRainExpected
+            }
+            
+            guard !rainyHours.isEmpty else {
+                print("No rain epected in the next 8 hours")
+                return
+            }
+            
             try await NotificationService()
-                .scheduleWeatherNotification(
-                    for: city,
-                    weather: weather.current
-                )
+                .scheduleRainNotification(for: city, rainyHours: rainyHours)
 
         } catch {
             print("Background weather refresh failed: \(error)")

@@ -55,7 +55,7 @@ struct ContentView: View {
 
                 Button("Test Weather Notification") {
                     Task {
-                        guard let currentWeather else {
+                        guard !hourlyWeather.isEmpty else {
                             print("Weather not loaded yet")
                             return
                         }
@@ -70,10 +70,7 @@ struct ContentView: View {
                             }
 
                             try await NotificationService()
-                                .scheduleWeatherNotification(
-                                    for: selectedCity,
-                                    weather: currentWeather
-                                )
+                                .scheduleRainNotification(for: selectedCity, rainyHours: hourlyWeather)
                             print("Test notification scheduled")
                         } catch {
                             print("Unable to schedule notification \(error)")

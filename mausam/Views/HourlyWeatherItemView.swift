@@ -9,13 +9,21 @@ import SwiftUI
 
 struct HourlyWeatherItemView: View {
     let weather: HourlyWeather
-
+    let timezone: TimeZone
+    
+    private var hourText: String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "ha"
+        formatter.timeZone = timezone
+        return formatter.string(from: weather.date)
+    }
+    
     var body: some View {
         VStack(spacing: 10) {
             if weather.isCurrentHour {
                 Text("Now").font(.subheadline)
             } else {
-                Text(weather.date, format: .dateTime.hour()).font(.subheadline)
+                Text(hourText).font(.subheadline)
             }
             Image(systemName: weather.symbolName)
                 .font(.title2)
@@ -33,7 +41,10 @@ struct HourlyWeatherItemView: View {
             date: .now,
             symbolName: "sun.max.fill",
             temperature: 78,
+            precipitationProbability: 0,
+            precipitationAmount: 0,
             isCurrentHour: true
-        )
+        ),
+        timezone: TimeZone(identifier: "America/New_York") ?? .gmt
     )
 }

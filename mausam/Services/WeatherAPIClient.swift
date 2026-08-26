@@ -8,17 +8,22 @@
 import Foundation
 
 struct WeatherAPIClient {
-    func fetchWeather(latitude: Double, longitude: Double) async throws
+    func fetchWeather(latitude: Double, longitude: Double, timezone: String) async throws
         -> OpenMeteoResponse
     {
-        let urlString =
-            "https://api.open-meteo.com/v1/forecast"
-            + "?latitude=\(latitude)"
-            + "&longitude=\(longitude)"
-            + "&current=temperature_2m"
-            + "&temperature_unit=celsius"
+        var components = URLComponents(string: "https://api.open-meteo.com/v1/forecast")
+        components?.queryItems = [
+            URLQueryItem(name: "latitude", value: String(latitude)),
+            URLQueryItem(name: "longitude", value: String(longitude)),
+            URLQueryItem(name: "current", value: "temperature_2m"),
+            URLQueryItem(name: "temperature_unit", value: "celsius"),
+            URLQueryItem(name: "hourly", value: "temperature_2m,precipitation_probability,precipitation,weather_code"),
+            URLQueryItem(name: "forecast_days", value: "2"),
+            URLQueryItem(name: "timezone", value: timezone),
+            ]
+        
 
-        guard let url = URL(string: urlString) else {
+        guard let url = components?.url else {
             throw URLError(.badURL)
         }
 
@@ -32,6 +37,7 @@ struct WeatherAPIClient {
         guard (200...299).contains(httpResponse.statusCode) else {
             throw URLError(.badServerResponse)
         }
+
         return try JSONDecoder().decode(
             OpenMeteoResponse.self,
             from: data

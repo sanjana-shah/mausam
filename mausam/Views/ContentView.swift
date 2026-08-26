@@ -10,6 +10,7 @@ import SwiftUI
 struct ContentView: View {
 
     @State private var currentWeather: CurrentWeather?
+    @State private var hourlyWeather: [HourlyWeather] = []
     @State private var isShowingCitySearch = false
     @State private var selectedCity: CitySearchResult
 
@@ -46,6 +47,10 @@ struct ContentView: View {
                     ).foregroundStyle(.primary)
                 } else {
                     ProgressView()
+                }
+                
+                if !hourlyWeather.isEmpty {
+                    HourlyForecastView(hourlyWeather: hourlyWeather, timezone: TimeZone(identifier: selectedCity.timezone) ?? .current)
                 }
 
                 Button("Test Weather Notification") {
@@ -97,11 +102,13 @@ struct ContentView: View {
     }
     private func loadWeather(for city: CitySearchResult) async {
         do {
-            let weather = try await WeatherService().currentWeather(
+            let weather = try await WeatherService().forecast(
                 latitude: city.latitude,
-                longitude: city.longitude
+                longitude: city.longitude,
+                timezone: city.timezone
             )
-            currentWeather = weather
+            currentWeather = weather.current
+            hourlyWeather = weather.hourly
         } catch {
             print("Unable to load weather: \(error)")
         }

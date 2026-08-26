@@ -35,14 +35,15 @@ final class BackgroundRefreshService {
         }
 
         do {
-            let weather = try await WeatherService().currentWeather(
+            let weather = try await WeatherService().forecast(
                 latitude: city.latitude,
-                longitude: city.longitude
+                longitude: city.longitude,
+                timezone: city.timezone
             )
             try await NotificationService()
                 .scheduleWeatherNotification(
                     for: city,
-                    weather: weather
+                    weather: weather.current
                 )
 
         } catch {

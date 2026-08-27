@@ -15,44 +15,66 @@ struct CitySearchView: View {
     @State private var errorMessage: String?
 
     var body: some View {
-        VStack(spacing: 16) {
-            TextField("Search for a city", text: $searchText)
-                .textFieldStyle(.roundedBorder)
-                .textInputAutocapitalization(.words)
-                .autocorrectionDisabled()
-
-            Button("Search") {
-                Task {
-                    await searchCities()
+        ZStack {
+            Color.black.ignoresSafeArea()
+            VStack(alignment: .leading, spacing: 12) {
+                Text("> search city")
+                    .font(.system(.body, design: .monospaced))
+                    .foregroundStyle(.green)
+                
+                HStack(spacing: 0) {
+                    Text("$ ").foregroundStyle(.green)
+                    TextField("Search for a city", text: $searchText)
+                        .textFieldStyle(.plain)
+                        .foregroundStyle(.green)
+                        .tint(.green)
+                        .textInputAutocapitalization(.words)
+                        .autocorrectionDisabled()
+                    
+                }.font(.system(.body, design: .monospaced))
+                
+                Button("> run search") {
+                    Task {
+                        await searchCities()
+                    }
                 }
-            }
-            .disabled(
+                .font(.system(.body, design: .monospaced))
+                .foregroundStyle(.cyan)
+                .buttonStyle(.plain)
+                .disabled(
                 searchText.trimmingCharacters(in: .whitespacesAndNewlines)
-                    .isEmpty
-            )
-
+                    .isEmpty)
+            
             if isSearching {
-                ProgressView("Searching...")
+                Text("> searching...")
+                    .foregroundStyle(.green)
             } else if let errorMessage {
-                Text(errorMessage)
+                Text("> error: \(errorMessage.lowercased())")
                     .foregroundStyle(.red)
             } else {
-                List(results) { city in
+                ForEach(results) { city in
                     Button {
                         onCitySelected(city)
                     } label: {
-                        VStack(alignment: .leading) {
-                            Text(city.name).font(.headline)
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("> \(city.name.lowercased())")
+                                .foregroundStyle(.cyan)
 
-                            Text(city.country).font(.subheadline)
-                                .foregroundStyle(.secondary)
+                            Text("  \(city.country.lowercased()) / \(city.timezone)")
+                                .foregroundStyle(.green.opacity(0.8))
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
-                    }.buttonStyle(.plain)
-
-                }.listStyle(.plain)
+                        .padding(.vertical, 4)
+                    }
+                    .buttonStyle(.plain)
+                }
+                .padding(.top, 2)
             }
-        }.padding()
+                
+        Text("█").foregroundStyle(.green)
+        }.font(.system(.body, design: .monospaced))
+                .padding()
+        }
     }
 
     private func searchCities() async {

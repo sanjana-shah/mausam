@@ -3,6 +3,10 @@ This app does not at any point request your phone's location. You can set a city
 
 Also, it will notify you if it's gonna rain or snow around you. Maybe. If it wants to. Remember when I said this app was kinda terrible?
 
+## License
+
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
+
 ## Screenshots & Recording
 
 ### App Recording

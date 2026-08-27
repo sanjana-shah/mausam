@@ -14,8 +14,8 @@ final class BackgroundRefreshService {
         let request = BGAppRefreshTaskRequest(identifier: Self.taskIdentifier)
 
         request.earliestBeginDate = Calendar.current.date(
-            byAdding: .hour,
-            value: 4,
+            byAdding: .minute,
+            value: 15,
             to: Date()
         )
 

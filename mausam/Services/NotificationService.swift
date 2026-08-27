@@ -55,7 +55,7 @@ struct NotificationService {
         
         let schedule = rainyHours.map { hour in
             "\(formatter.string(from: hour.date)): \(hour.precipitationAmount) mm"
-        }.joined(separator: ", ")
+        }.joined(separator: "\n")
         
         let content = UNMutableNotificationContent()
         content.title = "Rain expected in \(city.name)"

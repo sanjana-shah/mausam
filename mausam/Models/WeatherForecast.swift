@@ -10,4 +10,5 @@ import Foundation
 struct WeatherForecast {
     let current: CurrentWeather
     let hourly: [HourlyWeather]
+    let daily: [DailyWeather]
 }

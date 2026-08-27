@@ -74,8 +74,6 @@ struct CitySearchView: View {
                 }
                 .padding(.top, 2)
             }
-                
-        Text("█").foregroundStyle(.green)
         }.font(.system(.body, design: .monospaced))
                 .padding()
         }

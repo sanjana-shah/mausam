@@ -45,6 +45,9 @@ struct WeatherService {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm"
         dateFormatter.timeZone = TimeZone(identifier: timezone)
+        let dailyDateFormatter = DateFormatter()
+        dailyDateFormatter.dateFormat = "yyyy-MM-dd"
+        dailyDateFormatter.timeZone = TimeZone(identifier: timezone)
         let now = Date()
         let twentyFourHoursFromNow = now.addingTimeInterval(24 * 60 * 60)
         var calendar = Calendar.current
@@ -72,7 +75,25 @@ struct WeatherService {
                 precipitationAmount: response.hourly.precipitationAmounts[index],
                 isCurrentHour: calendar.isDate(date, equalTo: now, toGranularity: .hour)
             )
-        }
-        return WeatherForecast(current: currentWeather, hourly: hourly)
+        }.prefix(8).map{$0}
+        
+        let daily: [DailyWeather] = response.daily.time.indices.compactMap {index -> DailyWeather? in
+            guard
+                let date = dailyDateFormatter.date(from: response.daily.time[index]),
+                response.daily.temperaturesMax.indices.contains(index),
+                response.daily.temperaturesMin.indices.contains(index),
+                response.daily.precipitationProbabilitiesMax.indices.contains(index)
+            else {
+                return nil
+            }
+            return DailyWeather (
+                date: date,
+                temperatureMin: response.daily.temperaturesMin[index].rounded(),
+                temperatureMax: response.daily.temperaturesMax[index].rounded(),
+                precipitationProbabilityMax: Int(response.daily.precipitationProbabilitiesMax[index].rounded()),
+            )
+        }.prefix(8).map{$0}
+        
+        return WeatherForecast(current: currentWeather, hourly: hourly, daily: daily)
     }
 }

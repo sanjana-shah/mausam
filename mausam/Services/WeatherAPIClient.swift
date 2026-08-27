@@ -18,8 +18,9 @@ struct WeatherAPIClient {
             URLQueryItem(name: "current", value: "temperature_2m,apparent_temperature,cloud_cover,weather_code"),
             URLQueryItem(name: "temperature_unit", value: "celsius"),
             URLQueryItem(name: "hourly", value: "temperature_2m,precipitation_probability,precipitation,weather_code"),
-            URLQueryItem(name: "forecast_days", value: "2"),
+            URLQueryItem(name: "forecast_days", value: "7"),
             URLQueryItem(name: "timezone", value: timezone),
+            URLQueryItem(name: "daily", value: "temperature_2m_max,temperature_2m_min,precipitation_probability_max"),
             ]
         
 

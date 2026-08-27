@@ -10,6 +10,7 @@ import Foundation
 struct OpenMeteoResponse: Decodable {
     let current: CurrentWeatherResponse
     let hourly: HourlyWeatherResponse
+    let daily: DailyWeatherResponse
 }
 
 struct CurrentWeatherResponse: Decodable {
@@ -37,5 +38,18 @@ struct HourlyWeatherResponse: Decodable {
         case precipitationProbabilities = "precipitation_probability"
         case precipitationAmounts = "precipitation"
         case weatherCodes = "weather_code"
+    }
+}
+
+struct DailyWeatherResponse: Decodable {
+    let time: [String]
+    let temperaturesMax: [Double]
+    let temperaturesMin: [Double]
+    let precipitationProbabilitiesMax: [Double]
+    enum CodingKeys: String, CodingKey {
+        case time
+        case temperaturesMax = "temperature_2m_max"
+        case temperaturesMin = "temperature_2m_min"
+        case precipitationProbabilitiesMax = "precipitation_probability_max"
     }
 }

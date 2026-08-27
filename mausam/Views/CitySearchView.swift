@@ -28,8 +28,12 @@ struct CitySearchView: View {
                         .textFieldStyle(.plain)
                         .foregroundStyle(.green)
                         .tint(.green)
-                        .textInputAutocapitalization(.words)
                         .autocorrectionDisabled()
+                        .onSubmit {
+                            Task {
+                                await searchCities()
+                            }
+                        }
                     
                 }.font(.system(.body, design: .monospaced))
                 

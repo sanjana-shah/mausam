@@ -50,7 +50,8 @@ struct WeatherService {
         var calendar = Calendar.current
         calendar.timeZone = TimeZone(identifier: timezone) ?? .current
         
-        let currentWeather = CurrentWeather(temperature: response.current.temperature)
+        let currentWeather = CurrentWeather(temperature: response.current.temperature, apparentTemperature: response.current.apparentTemperature, cloudCover: Int(response.current.cloudCover.rounded()), weatherCode: response.current.weatherCode)
+        
         let hourly: [HourlyWeather] = response.hourly.time.indices.compactMap {index -> HourlyWeather? in
             guard
                 let date = dateFormatter.date(from: response.hourly.time[index]),

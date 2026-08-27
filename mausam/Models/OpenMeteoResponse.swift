@@ -14,8 +14,14 @@ struct OpenMeteoResponse: Decodable {
 
 struct CurrentWeatherResponse: Decodable {
     let temperature: Double
+    let apparentTemperature: Double
+    let cloudCover: Double
+    let weatherCode: Int
     enum CodingKeys: String, CodingKey {
         case temperature = "temperature_2m"
+        case apparentTemperature = "apparent_temperature"
+        case cloudCover = "cloud_cover"
+        case weatherCode = "weather_code"
     }
 }
 

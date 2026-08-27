@@ -100,9 +100,12 @@ struct ContentView: View {
         
         
         if let currentWeather {
+            lines.append("> time: \(time) \(abbreviation)")
             lines.append("> current conditions")
             lines.append("  temp: \(Int(currentWeather.temperature.rounded())) C / \(Int(currentWeather.temperatureFahrenheit.rounded())) F")
-            lines.append("  time: \(time) \(abbreviation)")
+            
+            lines.append("  feels like: \(Int(currentWeather.apparentTemperature.rounded())) C / \(Int(currentWeather.apparentTemperatureFahrenheit.rounded())) F")
+            lines.append("  cloud cover: \(currentWeather.cloudCover)%")
             lines.append("\n")
         }
         

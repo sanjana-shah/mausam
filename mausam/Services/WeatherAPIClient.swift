@@ -15,7 +15,7 @@ struct WeatherAPIClient {
         components?.queryItems = [
             URLQueryItem(name: "latitude", value: String(latitude)),
             URLQueryItem(name: "longitude", value: String(longitude)),
-            URLQueryItem(name: "current", value: "temperature_2m"),
+            URLQueryItem(name: "current", value: "temperature_2m,apparent_temperature,cloud_cover,weather_code"),
             URLQueryItem(name: "temperature_unit", value: "celsius"),
             URLQueryItem(name: "hourly", value: "temperature_2m,precipitation_probability,precipitation,weather_code"),
             URLQueryItem(name: "forecast_days", value: "2"),

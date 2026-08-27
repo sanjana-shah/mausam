@@ -30,12 +30,12 @@ struct ContentView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 1) {
                 Text(visibleOpeningText.joined())
-                .font(.system(.body, design: .monospaced))
+                .font(.system(.callout, design: .monospaced))
                 .foregroundStyle(.green)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 
                 Text(visibleText.joined())
-                .font(.system(.body, design: .monospaced))
+                .font(.system(.callout, design: .monospaced))
                 .foregroundStyle(.green)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 
@@ -45,7 +45,7 @@ struct ContentView: View {
                             await showWeeklyForecast()
                         }
                     }
-                    .font(.system(.body, design: .monospaced))
+                    .font(.system(.callout, design: .monospaced))
                     .foregroundStyle(.cyan)
                     .buttonStyle(.plain)
                 }
@@ -55,14 +55,14 @@ struct ContentView: View {
                         clearTerminal()
                         isShowingCitySearch = true
                     }
-                    .font(.system(.body, design: .monospaced))
+                    .font(.system(.callout, design: .monospaced))
                     .foregroundStyle(.cyan)
                     .buttonStyle(.plain)
                 }
 
 
                 Text("█")
-                    .font(.system(.body, design: .monospaced))
+                    .font(.system(.callout, design: .monospaced))
                     .foregroundStyle(.green)
             }
             .padding()
@@ -216,10 +216,10 @@ struct ContentView: View {
     
     private func getForecastLine(weather: HourlyWeather) -> String {
         let time = weather.isCurrentHour ? "now" : hourText(for: weather.date)
-        let temperature = "\(Int(weather.temperature.rounded()))C / \(Int(weather.temperatureFahrenheit.rounded()))F"
-        let rainChance = weather.isRainExpected ? " rain: \(weather.precipitationProbability)%" : ""
+        let temperature = " \(Int(weather.temperature.rounded()))C/\(Int(weather.temperatureFahrenheit.rounded()))F"
+        let rainChance = weather.isRainExpected ? " rain \(weather.precipitationProbability)%" : ""
 
-        return "  \(time.padding(toLength: 6, withPad: " ", startingAt: 0))\(getConditionText(symbolName: weather.symbolName).padding(toLength: 9, withPad: " ", startingAt: 0))\(temperature)\(rainChance)"
+        return "  \(time.padding(toLength: 5, withPad: " ", startingAt: 0))\(getConditionText(symbolName: weather.symbolName).padding(toLength: 7, withPad: " ", startingAt: 0))\(temperature)\(rainChance)"
     }
     
     private func getDailyForecastLines() -> [String] {

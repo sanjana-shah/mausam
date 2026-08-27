@@ -13,6 +13,7 @@ struct CitySearchView: View {
     @State private var results: [CitySearchResult] = []
     @State private var isSearching = false
     @State private var errorMessage: String?
+    @FocusState private var isSearchFieldFocused: Bool
 
     var body: some View {
         ZStack {
@@ -29,6 +30,7 @@ struct CitySearchView: View {
                         .foregroundStyle(.green)
                         .tint(.green)
                         .autocorrectionDisabled()
+                        .focused($isSearchFieldFocused)
                         .onSubmit {
                             Task {
                                 await searchCities()
@@ -76,6 +78,10 @@ struct CitySearchView: View {
             }
         }.font(.system(.body, design: .monospaced))
                 .padding()
+        }
+        .task {
+            await Task.yield()
+            isSearchFieldFocused = true
         }
     }
 

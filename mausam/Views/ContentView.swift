@@ -52,7 +52,6 @@ struct ContentView: View {
                 
                 if !visibleChangeCityText.isEmpty {
                     Button(visibleChangeCityText.joined()) {
-                        clearTerminal()
                         isShowingCitySearch = true
                     }
                     .font(.system(.callout, design: .monospaced))

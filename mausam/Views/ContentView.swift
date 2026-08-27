@@ -15,6 +15,7 @@ struct ContentView: View {
     @State private var selectedCity: CitySearchResult
     @State private var visibleText: [String] = []
     @State private var visibleOpeningText: [String] = []
+    @State private var visibleChangeCityText: [String] = []
 
     init() {
         let initialCity = CityStorage.load() ?? CitySearchResult.newYork
@@ -35,12 +36,14 @@ struct ContentView: View {
                 .foregroundStyle(.green)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 
-                Button("> change-city") {
-                    isShowingCitySearch = true
+                if !visibleChangeCityText.isEmpty {
+                    Button(visibleChangeCityText.joined()) {
+                        isShowingCitySearch = true
+                    }
+                    .font(.system(.body, design: .monospaced))
+                    .foregroundStyle(.cyan)
+                    .buttonStyle(.plain)
                 }
-                .font(.system(.body, design: .monospaced))
-                .foregroundStyle(.cyan)
-                .buttonStyle(.plain)
 
                 Text("█")
                     .font(.system(.body, design: .monospaced))
@@ -132,6 +135,14 @@ struct ContentView: View {
             visibleText.append("\n")
         }
     }
+
+    private func animateChangeCityButton() async {
+        visibleChangeCityText = []
+        for character in "> change-city" {
+            visibleChangeCityText.append(String(character))
+            try? await Task.sleep(for: .milliseconds(2))
+        }
+    }
     
     private func loadWeather(for city: CitySearchResult) async {
         do {
@@ -140,10 +151,12 @@ struct ContentView: View {
                 longitude: city.longitude,
                 timezone: city.timezone
             )
+            visibleChangeCityText = []
             await animateOpeningTerminalLines()
             currentWeather = weather.current
             hourlyWeather = weather.hourly
             await animateTerminalLines()
+            await animateChangeCityButton()
         } catch {
             print("Unable to load weather: \(error)")
         }

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
 
+    @Environment(\.scenePhase) private var scenePhase
     @State private var currentWeather: CurrentWeather?
     @State private var hourlyWeather: [HourlyWeather] = []
     @State private var dailyWeather: [DailyWeather] = []
@@ -19,6 +20,7 @@ struct ContentView: View {
     @State private var visibleWeeklyForecastText: [String] = []
     @State private var visibleChangeCityText: [String] = []
     @State private var hasShownWeeklyForecast = false
+    @State private var isLoadingWeather = false
 
     init() {
         let initialCity = CityStorage.load() ?? CitySearchResult.newYork
@@ -81,6 +83,15 @@ struct ContentView: View {
         .task {
             await loadWeather(for: selectedCity)
             BackgroundRefreshService().scheduleNextRefresh()
+        }
+        .onChange(of: scenePhase) { _, newPhase in
+            guard newPhase == .active, !isShowingCitySearch else {
+                return
+            }
+            
+            Task {
+                await loadWeather(for: selectedCity)
+            }
         }
     }
     
@@ -168,6 +179,15 @@ struct ContentView: View {
     }
     
     private func loadWeather(for city: CitySearchResult) async {
+        guard !isLoadingWeather else {
+            return
+        }
+        
+        isLoadingWeather = true
+        defer {
+            isLoadingWeather = false
+        }
+        
         do {
             let weather = try await WeatherService().forecast(
                 latitude: city.latitude,

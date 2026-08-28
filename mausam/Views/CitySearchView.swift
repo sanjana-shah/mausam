@@ -66,7 +66,7 @@ struct CitySearchView: View {
                             Text("> \(city.name.lowercased())")
                                 .foregroundStyle(.cyan)
 
-                            Text("  \(city.country.lowercased()) / \(city.timezone)")
+                            Text("  \(city.admin1.lowercased()), \(city.country.lowercased())")
                                 .foregroundStyle(.green.opacity(0.8))
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)

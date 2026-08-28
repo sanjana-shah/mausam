@@ -231,7 +231,7 @@ struct ContentView: View {
             dailyChartRow(label: "", values: dailyHighTemperatureBars(for: forecast)),
             dailyChartRow(label: "lo", values: forecast.map { "\(Int($0.temperatureMin.rounded()))C" }),
             dailyChartRow(label: "", values: forecast.map { "\(Int($0.temperatureMinFahrenheit.rounded()))F" }),
-            dailyChartRow(label: "r%", values: forecast.map { "\($0.precipitationProbabilityMax)" })
+            dailyChartRow(label: "r", values: forecast.map { "\($0.precipitationProbabilityMax)%" })
         ]
     }
     

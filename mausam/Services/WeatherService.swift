@@ -42,23 +42,30 @@ struct WeatherService {
             timezone: timezone
         )
         
+        let cityTimeZone = TimeZone(identifier: timezone) ?? .gmt
+        var calendar = Calendar.current
+        calendar.timeZone = cityTimeZone
+
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm"
-        dateFormatter.timeZone = TimeZone(identifier: timezone)
+        dateFormatter.timeZone = cityTimeZone
         let dailyDateFormatter = DateFormatter()
         dailyDateFormatter.dateFormat = "yyyy-MM-dd"
-        dailyDateFormatter.timeZone = TimeZone(identifier: timezone)
+        dailyDateFormatter.timeZone = cityTimeZone
         let now = Date()
-        let twentyFourHoursFromNow = now.addingTimeInterval(24 * 60 * 60)
-        var calendar = Calendar.current
-        calendar.timeZone = TimeZone(identifier: timezone) ?? .current
+        let currentCityHour = calendar.dateInterval(of: .hour, for: now)?.start ?? now
+        let twentyFourHoursFromNow = calendar.date(
+            byAdding: .hour,
+            value: 24,
+            to: currentCityHour
+        ) ?? currentCityHour.addingTimeInterval(24 * 60 * 60)
         
         let currentWeather = CurrentWeather(temperature: response.current.temperature, apparentTemperature: response.current.apparentTemperature, cloudCover: Int(response.current.cloudCover.rounded()), weatherCode: response.current.weatherCode)
         
         let hourly: [HourlyWeather] = response.hourly.time.indices.compactMap {index -> HourlyWeather? in
             guard
                 let date = dateFormatter.date(from: response.hourly.time[index]),
-                date >= now && date < twentyFourHoursFromNow,
+                date >= currentCityHour && date < twentyFourHoursFromNow,
                 response.hourly.temperatures.indices.contains(index),
                 response.hourly.precipitationProbabilities.indices.contains(index),
                 response.hourly.precipitationAmounts.indices.contains(index),

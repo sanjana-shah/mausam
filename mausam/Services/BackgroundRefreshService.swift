@@ -41,10 +41,18 @@ final class BackgroundRefreshService {
                 timezone: city.timezone
             )
             let now = Date()
-            let eightHoursFromNow = now.addingTimeInterval(8 * 60 * 60)
+            let cityTimeZone = TimeZone(identifier: city.timezone) ?? .gmt
+            var calendar = Calendar.current
+            calendar.timeZone = cityTimeZone
+            let currentCityHour = calendar.dateInterval(of: .hour, for: now)?.start ?? now
+            let eightHoursFromNow = calendar.date(
+                byAdding: .hour,
+                value: 8,
+                to: currentCityHour
+            ) ?? currentCityHour.addingTimeInterval(8 * 60 * 60)
             
             let rainyHours = weather.hourly.filter{ hour in
-                hour.date >= now &&
+                hour.date >= currentCityHour &&
                 hour.date < eightHoursFromNow &&
                 hour.isRainExpected
             }
